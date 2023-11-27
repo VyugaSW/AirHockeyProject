@@ -77,27 +77,24 @@ namespace AirHockeyProject
 
         private void CalculatePoint(Point pointOne, string border)
         {
-            Point borderPoint;
+            Point borderPoint = new Point();
             switch (border) 
             {
                 case "Down_Y":
                     borderPoint = new Point(0, pointOne.Y - 10);
-                    CreateLineMoving(borderPoint, pointOne);
                     break;
                 case "Down_X":
                     borderPoint = new Point(pointOne.X - 10,0);
-                    CreateLineMoving(borderPoint, pointOne);
                     break;
                 case "Up_Y":
                     borderPoint = new Point(0, pointOne.Y + 10);
-                    CreateLineMoving(borderPoint, pointOne);
                     break;
                 case "Up_X":
                     borderPoint = new Point(pointOne.X + 10, 0);
-                    CreateLineMoving(borderPoint, pointOne);
                     break;
 
             }
+            CreateLineMoving(borderPoint, pointOne);
         }
         public void CreateLineMoving(Point pointOne, Point pointTwo)
         {
