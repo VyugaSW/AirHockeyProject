@@ -45,7 +45,7 @@ namespace AirHockeyProject
             {
                 if (IsCollision(obj))
                 {
-                    CalculateLineMoving(obj.ObjPosition.Pose, this.ObjPosition.Pose);
+                    CreateLineMoving(obj.ObjPosition.Pose, this.ObjPosition.Pose);
                     break;
                 }
             }
@@ -54,14 +54,14 @@ namespace AirHockeyProject
         {
 
             if (ObjPosition.Pose.X > 500)
-                CalculateLineMoving(ObjPosition.Pose, "Up_X");
+                CalculatePoint(ObjPosition.Pose, "Up_X");
             else if (ObjPosition.Pose.X < 0)
-                CalculateLineMoving(ObjPosition.Pose, "Down_X");
+                CalculatePoint(ObjPosition.Pose, "Down_X");
 
             if (ObjPosition.Pose.Y > 500)
-                CalculateLineMoving(ObjPosition.Pose, "Up_Y");
+                CalculatePoint(ObjPosition.Pose, "Up_Y");
             else if (ObjPosition.Pose.Y < 0)
-                CalculateLineMoving(ObjPosition.Pose, "Down_Y");
+                CalculatePoint(ObjPosition.Pose, "Down_Y");
         }
         private bool IsCollision(FieldObject objCollision)
         {
@@ -75,33 +75,34 @@ namespace AirHockeyProject
             return false;
         }
 
-        private void CalculateLineMoving(Point point, string border)
+        private void CalculatePoint(Point pointOne, string border)
         {
-            double tangentInclination = 0;
-            double YaxisOffset;
-            string mode = "Forward";
-
-            switch(border)
+            Point borderPoint;
+            switch (border) 
             {
-                case "Down_X":
                 case "Down_Y":
-                    tangentInclination = 1;
+                    borderPoint = new Point(0, pointOne.Y - 10);
+                    CreateLineMoving(borderPoint, pointOne);
                     break;
-                case "Up_X":
-                    tangentInclination = 1;
-                    mode = "Back";
+                case "Down_X":
+                    borderPoint = new Point(pointOne.X - 10,0);
+                    CreateLineMoving(borderPoint, pointOne);
                     break;
                 case "Up_Y":
-                    tangentInclination = -1;
+                    borderPoint = new Point(0, pointOne.Y + 10);
+                    CreateLineMoving(borderPoint, pointOne);
                     break;
+                case "Up_X":
+                    borderPoint = new Point(pointOne.X + 10, 0);
+                    CreateLineMoving(borderPoint, pointOne);
+                    break;
+
             }
-
-            YaxisOffset = point.Y - tangentInclination * point.X;
-
-            CreateLineMoving(tangentInclination, YaxisOffset, mode);
         }
-        public void CalculateLineMoving(Point pointOne, Point pointTwo)
+        public void CreateLineMoving(Point pointOne, Point pointTwo)
         {
+            _collisionTimer.Stop();
+
             double tangentInclination = (pointOne.Y - pointTwo.Y) / (pointOne.X - pointTwo.X);
             double YaxisOffset = pointOne.Y - tangentInclination * pointOne.X;
             string mode = string.Empty;
@@ -111,13 +112,11 @@ namespace AirHockeyProject
             else
                 mode = "Back";
 
-            CreateLineMoving(tangentInclination, YaxisOffset, mode);
-        }
-        private void CreateLineMoving(double tangentInclination, double YaxisOffset, string mode)
-        {
             _movingline?.MovingTimer.Stop();
             _movingline = new MovingLine(this, tangentInclination, YaxisOffset, mode);
             _movingline.MovingTimer.Start();
+
+            _collisionTimer.Start();
         }
 
     }

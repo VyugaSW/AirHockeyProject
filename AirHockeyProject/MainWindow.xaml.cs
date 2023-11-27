@@ -54,7 +54,7 @@ namespace AirHockeyProject
                     x += 1.5;
                     break;
                 case Key.D: // TESTS
-                    Puck.CalculateLineMoving(Puck.ObjPosition.Pose, Hockey.ObjPosition.Pose);
+                    Puck.CreateLineMoving(Puck.ObjPosition.Pose, Hockey.ObjPosition.Pose);
                     break;
             }
 
