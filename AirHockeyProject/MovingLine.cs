@@ -15,6 +15,7 @@ namespace AirHockeyProject
         private Puck _puck;
         private double _tangentInclination;
         private double _YaxisOffset;
+        private double CoordinateOffset = 1;
 
         public MovingLine(Puck puck, double tangentInclination, double YaxisOffset, string direction)
         {
@@ -25,7 +26,7 @@ namespace AirHockeyProject
             MovingTimer = new DispatcherTimer();
             MovingTimer.Interval = TimeSpan.FromMilliseconds(2.0);
 
-            if(direction == "Forward")
+            if (direction == "Forward")
                 MovingTimer.Tick += MoveForward;
             else
                 MovingTimer.Tick += MoveBack;
@@ -33,14 +34,14 @@ namespace AirHockeyProject
 
         public void MoveForward(object sender, EventArgs e)
         {
-            double newX = _puck.ObjPosition.Pose.X + 1;
+            double newX = _puck.ObjPosition.Pose.X + CoordinateOffset;
             double newY = newX * _tangentInclination + _YaxisOffset;
 
             _puck.ObjPosition.Pose = new Point(newX, newY);
         }
         public void MoveBack(object sender, EventArgs e)
         {
-            double newX = _puck.ObjPosition.Pose.X - 1;
+            double newX = _puck.ObjPosition.Pose.X - CoordinateOffset;
             double newY = newX * _tangentInclination + _YaxisOffset;
 
             _puck.ObjPosition.Pose = new Point(newX, newY);

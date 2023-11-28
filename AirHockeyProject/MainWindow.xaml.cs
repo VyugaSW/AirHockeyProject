@@ -23,7 +23,6 @@ namespace AirHockeyProject
     {
         public FieldObject Hockey { get; set; }
         public Puck Puck { get; set; }
-        DispatcherTimer _timer;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,19 +41,19 @@ namespace AirHockeyProject
             switch (e.Key)
             {
                 case Key.Up:
-                    y -= 1.5;
+                    y -= 1;
                     break;
                 case Key.Down:
-                    y += 1.5;
+                    y += 1;
                     break;
                 case Key.Left:
-                    x -= 1.5;
+                    x -= 1;
                     break;
                 case Key.Right:
-                    x += 1.5;
+                    x += 1;
                     break;
                 case Key.D: // TESTS
-                    Puck.CreateLineMoving(Puck.ObjPosition.Pose, Hockey.ObjPosition.Pose);
+                    Puck.CreateLineMoving(Hockey.ObjPosition.Pose, Puck.ObjPosition.Pose);
                     break;
             }
 

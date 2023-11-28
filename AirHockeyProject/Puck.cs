@@ -9,7 +9,6 @@ using System.Windows.Threading;
 namespace AirHockeyProject
 {
 
-
     public class Puck
     {
         public ObjPosition ObjPosition { get; set; }
@@ -17,6 +16,8 @@ namespace AirHockeyProject
         private readonly DispatcherTimer _collisionTimer;
         private readonly FieldObject[] _objectsOnField;
         private MovingLine _movingline = null;
+
+        private const int MaxBorder = 500;
 
         public Puck(UIElement movingObject, Action<UIElement, double> setLeft, Action<UIElement, double> setTop, FieldObject[] objects)
         {
@@ -29,7 +30,7 @@ namespace AirHockeyProject
 
         private void DispatcherTimerInit()
         {
-            _collisionTimer.Interval = TimeSpan.FromMilliseconds(0.01);
+            _collisionTimer.Interval = TimeSpan.FromMilliseconds(10.0);
             _collisionTimer.Tick += CheckCollision;
             _collisionTimer.Start();
         }
@@ -45,7 +46,9 @@ namespace AirHockeyProject
             {
                 if (IsCollision(obj))
                 {
+                    _collisionTimer.Stop();
                     CreateLineMoving(obj.ObjPosition.Pose, this.ObjPosition.Pose);
+                    _collisionTimer.Start();
                     break;
                 }
             }
@@ -53,12 +56,12 @@ namespace AirHockeyProject
         private void CheckCollisionBorders()
         {
 
-            if (ObjPosition.Pose.X > 500)
+            if (ObjPosition.Pose.X > MaxBorder)
                 CalculatePoint(ObjPosition.Pose, "Up_X");
             else if (ObjPosition.Pose.X < 0)
                 CalculatePoint(ObjPosition.Pose, "Down_X");
 
-            if (ObjPosition.Pose.Y > 500)
+            if (ObjPosition.Pose.Y > MaxBorder)
                 CalculatePoint(ObjPosition.Pose, "Up_Y");
             else if (ObjPosition.Pose.Y < 0)
                 CalculatePoint(ObjPosition.Pose, "Down_Y");
@@ -78,19 +81,20 @@ namespace AirHockeyProject
         private void CalculatePoint(Point pointOne, string border)
         {
             Point borderPoint = new Point();
-            switch (border) 
+            double offset = (ObjPosition.MovingObject as FrameworkElement).ActualWidth;
+            switch (border)
             {
                 case "Down_Y":
-                    borderPoint = new Point(0, pointOne.Y - 10);
+                    borderPoint = new Point(0, pointOne.Y - offset);
                     break;
                 case "Down_X":
-                    borderPoint = new Point(pointOne.X - 10,0);
+                    borderPoint = new Point(pointOne.X - offset, 0);
                     break;
                 case "Up_Y":
-                    borderPoint = new Point(0, pointOne.Y + 10);
+                    borderPoint = new Point(0, pointOne.Y + offset);
                     break;
                 case "Up_X":
-                    borderPoint = new Point(pointOne.X + 10, 0);
+                    borderPoint = new Point(pointOne.X + offset, 0);
                     break;
 
             }
@@ -98,11 +102,9 @@ namespace AirHockeyProject
         }
         public void CreateLineMoving(Point pointOne, Point pointTwo)
         {
-            _collisionTimer.Stop();
-
             double tangentInclination = (pointOne.Y - pointTwo.Y) / (pointOne.X - pointTwo.X);
             double YaxisOffset = pointOne.Y - tangentInclination * pointOne.X;
-            string mode = string.Empty;
+            string mode;
 
             if (pointOne.X < pointTwo.X)
                 mode = "Forward";
@@ -112,8 +114,6 @@ namespace AirHockeyProject
             _movingline?.MovingTimer.Stop();
             _movingline = new MovingLine(this, tangentInclination, YaxisOffset, mode);
             _movingline.MovingTimer.Start();
-
-            _collisionTimer.Start();
         }
 
     }
