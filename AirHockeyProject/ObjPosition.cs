@@ -10,7 +10,8 @@ namespace AirHockeyProject
 {
     public class ObjPosition
     {
-        public Point Pose { get; set; }
+        public Point CurrentPose { get; set; }
+        public Point PastPose { get; set; }
 
         public UIElement MovingObject { get; private set; }
 
@@ -22,7 +23,8 @@ namespace AirHockeyProject
         public ObjPosition(UIElement movingObject, Action<UIElement, double> setLeft, Action<UIElement, double> setTop)
         {
             _positionTimer = new DispatcherTimer();
-            Pose = new Point(0,0);
+            CurrentPose = new Point(0,0);
+            PastPose = new Point(0,0);
 
             EventSetLeft = setLeft;
             EventSetTop = setTop;
@@ -41,8 +43,9 @@ namespace AirHockeyProject
         {
             if (MovingObject != null && EventSetTop != null && EventSetLeft != null)
             {
-                EventSetLeft(MovingObject, Pose.X);
-                EventSetTop(MovingObject, Pose.Y);
+                PastPose = new Point(CurrentPose.X, CurrentPose.Y);
+                EventSetLeft(MovingObject, CurrentPose.X);
+                EventSetTop(MovingObject, CurrentPose.Y);
             }
         }
     }

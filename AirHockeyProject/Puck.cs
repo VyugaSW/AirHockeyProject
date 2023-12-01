@@ -15,9 +15,9 @@ namespace AirHockeyProject
 
         private readonly DispatcherTimer _collisionTimer;
         private readonly FieldObject[] _objectsOnField;
-        private MovingLine _movingline = null;
+        private MovingLine _movingLine = null;
 
-        private const int MaxBorder = 500;
+        private const double MaxBorder = 500;
 
         public Puck(UIElement movingObject, Action<UIElement, double> setLeft, Action<UIElement, double> setTop, FieldObject[] objects)
         {
@@ -47,28 +47,39 @@ namespace AirHockeyProject
                 if (IsCollision(obj))
                 {
                     _collisionTimer.Stop();
-                    CreateLineMoving(obj.ObjPosition.Pose, this.ObjPosition.Pose);
+
+                    MovingLine tempLine = MovingLine.CalculateLineMoving(this, obj.ObjPosition.CurrentPose, this.ObjPosition.CurrentPose);
+                    CreateLineMoving(tempLine);
+
                     _collisionTimer.Start();
+
                     break;
                 }
             }
         }
         private void CheckCollisionBorders()
         {
+            _collisionTimer.Stop();
 
-            if (ObjPosition.Pose.X > MaxBorder)
-                CalculatePoint(ObjPosition.Pose, "Up_X");
-            else if (ObjPosition.Pose.X < 0)
-                CalculatePoint(ObjPosition.Pose, "Down_X");
+            MovingLine tempLine = null;
 
-            if (ObjPosition.Pose.Y > MaxBorder)
-                CalculatePoint(ObjPosition.Pose, "Up_Y");
-            else if (ObjPosition.Pose.Y < 0)
-                CalculatePoint(ObjPosition.Pose, "Down_Y");
+            if (ObjPosition.CurrentPose.X > MaxBorder)
+                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "X");
+            else if (ObjPosition.CurrentPose.X < 0)
+                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "X");
+
+            if (ObjPosition.CurrentPose.Y > MaxBorder)
+                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "Y");
+            else if (ObjPosition.CurrentPose.Y < 0)
+                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "Y");
+
+            CreateLineMoving(tempLine);
+
+            _collisionTimer.Start();
         }
         private bool IsCollision(FieldObject objCollision)
         {
-            double lenBetweenCenters = (objCollision.ObjPosition.Pose - this.ObjPosition.Pose).Length;
+            double lenBetweenCenters = (objCollision.ObjPosition.CurrentPose - this.ObjPosition.CurrentPose).Length;
             double radiusObj = (objCollision.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
             double radiusPuck = (this.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
 
@@ -78,46 +89,18 @@ namespace AirHockeyProject
             return false;
         }
 
-        private void CalculatePoint(Point pointOne, string border)
+        private void CreateLineMoving(MovingLine objLine)
         {
-            Point borderPoint = new Point();
-            double offset = (ObjPosition.MovingObject as FrameworkElement).ActualWidth;
-            switch (border)
+            if (objLine != null)
             {
-                case "Down_Y":
-                    borderPoint = new Point(0, pointOne.Y - offset);
-                    break;
-                case "Down_X":
-                    borderPoint = new Point(pointOne.X - offset, 0);
-                    break;
-                case "Up_Y":
-                    borderPoint = new Point(0, pointOne.Y + offset);
-                    break;
-                case "Up_X":
-                    borderPoint = new Point(pointOne.X + offset, 0);
-                    break;
-
+                _movingLine?.MovingTimer.Stop();
+                _movingLine = objLine;
+                _movingLine.MovingTimer.Start();
             }
-            CreateLineMoving(borderPoint, pointOne);
         }
-        public void CreateLineMoving(Point pointOne, Point pointTwo)
-        {
-            double tangentInclination = (pointOne.Y - pointTwo.Y) / (pointOne.X - pointTwo.X);
-            double YaxisOffset = pointOne.Y - tangentInclination * pointOne.X;
-            string mode;
 
-            if (pointOne.X < pointTwo.X)
-                mode = "Forward";
-            else
-                mode = "Back";
-
-            _movingline?.MovingTimer.Stop();
-            _movingline = new MovingLine(this, tangentInclination, YaxisOffset, mode);
-            _movingline.MovingTimer.Start();
-        }
 
     }
-
 }
 
 

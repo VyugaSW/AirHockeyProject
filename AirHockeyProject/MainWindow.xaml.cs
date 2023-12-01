@@ -28,16 +28,17 @@ namespace AirHockeyProject
             InitializeComponent();
             Hockey = new FieldObject(ellipse, Canvas.SetLeft, Canvas.SetTop);
             Puck = new Puck(ellipsePuck, Canvas.SetLeft, Canvas.SetTop, new FieldObject[] { Hockey });
-            Hockey.ObjPosition.Pose = new Point(10, 50);
-            Puck.ObjPosition.Pose = new Point(20, 20);
+            Hockey.ObjPosition.CurrentPose = new Point(10, 50);
+            Puck.ObjPosition.CurrentPose = new Point(20, 20);
 
             PreviewKeyDown += Window_PreviewKeyDown;
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            double x = Hockey.ObjPosition.Pose.X;
-            double y = Hockey.ObjPosition.Pose.Y;
+            double x = Hockey.ObjPosition.CurrentPose.X;
+            double y = Hockey.ObjPosition.CurrentPose.Y;
+
             switch (e.Key)
             {
                 case Key.Up:
@@ -52,12 +53,9 @@ namespace AirHockeyProject
                 case Key.Right:
                     x += 1;
                     break;
-                case Key.D: // TESTS
-                    Puck.CreateLineMoving(Hockey.ObjPosition.Pose, Puck.ObjPosition.Pose);
-                    break;
             }
 
-            Hockey.ObjPosition.Pose = new Point(x,y);
+            Hockey.ObjPosition.CurrentPose = new Point(x,y);
         }
     }
 }
