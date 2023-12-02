@@ -8,6 +8,8 @@ using System.Windows.Threading;
 
 namespace AirHockeyProject
 {
+
+
     public class ObjPosition
     {
         public Point CurrentPose { get; set; }
@@ -35,7 +37,7 @@ namespace AirHockeyProject
 
         private void DispatcherTimerInit()
         {
-            _positionTimer.Interval = TimeSpan.FromMilliseconds(0.1);
+            _positionTimer.Interval = TimeSpan.FromMilliseconds(10.0);
             _positionTimer.Tick += UpdatePosition;
             _positionTimer.Start();
         }

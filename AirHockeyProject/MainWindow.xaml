@@ -8,7 +8,8 @@
         Title="MainWindow" Height="540" Width="520">
     <Canvas>
         <Rectangle Width="515" Height="515" Stroke="Black" StrokeThickness="2"/>
-        <Ellipse x:Name="ellipse" Fill="Red" Width="20" Height="20"/>
+        <Ellipse x:Name="ellipse1" Fill="Red" Width="20" Height="20"/>
+        <Ellipse x:Name="ellipse2" Fill="Red" Width="20" Height="20"/>
         <Ellipse x:Name="ellipsePuck" Fill="Blue" Width="20" Height="20" Canvas.Left="50" Canvas.Top="50"/>
     </Canvas>
 </Window>

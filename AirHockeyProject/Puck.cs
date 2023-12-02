@@ -47,10 +47,7 @@ namespace AirHockeyProject
                 if (IsCollision(obj))
                 {
                     _collisionTimer.Stop();
-
-                    MovingLine tempLine = MovingLine.CalculateLineMoving(this, obj.ObjPosition.CurrentPose, this.ObjPosition.CurrentPose);
-                    CreateLineMoving(tempLine);
-
+                    CreateLineMoving(new MovingLine(this, obj.ObjPosition.CurrentPose, this.ObjPosition.CurrentPose));
                     _collisionTimer.Start();
 
                     break;
@@ -63,15 +60,15 @@ namespace AirHockeyProject
 
             MovingLine tempLine = null;
 
-            if (ObjPosition.CurrentPose.X > MaxBorder)
-                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "X");
-            else if (ObjPosition.CurrentPose.X < 0)
-                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "X");
+            if (ObjPosition.CurrentPose.X + 10 > MaxBorder)
+                tempLine = new MovingLine(this, "X");
+            else if (ObjPosition.CurrentPose.X  < 0)
+                tempLine = new MovingLine(this, "X");
 
-            if (ObjPosition.CurrentPose.Y > MaxBorder)
-                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "Y");
-            else if (ObjPosition.CurrentPose.Y < 0)
-                tempLine = MovingLine.CalculateLineMoving(this, ObjPosition, "Y");
+            if (ObjPosition.CurrentPose.Y + 10 > MaxBorder)
+                tempLine = new MovingLine(this, "Y");
+            else if (ObjPosition.CurrentPose.Y  < 0)
+                tempLine = new MovingLine(this, "Y");
 
             CreateLineMoving(tempLine);
 

@@ -12,8 +12,8 @@ namespace AirHockeyProject
     {
         public DispatcherTimer MovingTimer { get; }
         public Puck Puck { get; }
-        public double TangnentInclination { get; }
-        public double YaxisOffset { get; }
+        public double TangnentInclination { get; private set; }
+        public double YaxisOffset { get; private set; }
 
 
         private double CoordinateOffset = 0.7;
@@ -23,9 +23,29 @@ namespace AirHockeyProject
             Puck = puck;
             TangnentInclination = tangentInclination;
             this.YaxisOffset = YaxisOffset;
-
             MovingTimer = new DispatcherTimer();
-            MovingTimer.Interval = TimeSpan.FromMilliseconds(2.0);
+
+            DisptacherTimerInit(direction);
+        }
+        public MovingLine(Puck puck, Point pointOne, Point pointTwo)
+        {
+            Puck = puck;
+            MovingTimer = new DispatcherTimer();
+
+            DisptacherTimerInit(CalculateLineMoving(pointOne,pointTwo));
+        }
+        public MovingLine(Puck puck, string borderAxis)
+        {
+            Puck = puck;
+            MovingTimer = new DispatcherTimer();
+
+            DisptacherTimerInit(CalculateLineMoving(puck.ObjPosition, borderAxis));
+        }
+
+
+        private void DisptacherTimerInit(string direction)
+        {
+            MovingTimer.Interval = TimeSpan.FromMilliseconds(10.0);
 
             if (direction == "Forward")
                 MovingTimer.Tick += MoveForward;
@@ -48,29 +68,30 @@ namespace AirHockeyProject
             Puck.ObjPosition.CurrentPose = new Point(newX, newY);
         }
 
-        static private double CalculateTangentInclination(Point pointOne, Point pointTwo)
+        private double CalculateTangentInclination(Point pointOne, Point pointTwo)
             => (pointOne.Y - pointTwo.Y) / (pointOne.X - pointTwo.X);
-        static private double CalculateYaxisOffset(Point point, double tangentInclination)
+        private double CalculateYaxisOffset(Point point, double tangentInclination)
             => point.Y - tangentInclination * point.X;
 
-        static public MovingLine CalculateLineMoving(Puck puck, Point pointOne, Point pointTwo)
+        private string CalculateLineMoving(Point pointOne, Point pointTwo)
         {
-            double tangentInclination = CalculateTangentInclination(pointOne, pointTwo);
-            double YaxisOffset = CalculateYaxisOffset(pointOne, tangentInclination);
+            TangnentInclination = CalculateTangentInclination(pointOne, pointTwo);
+            YaxisOffset = CalculateYaxisOffset(pointOne, TangnentInclination);
             string mode;
 
             if (pointOne.X < pointTwo.X)
                 mode = "Forward";
             else
                 mode = "Back";
-            return new MovingLine(puck, tangentInclination, YaxisOffset, mode);
+
+            return mode;
         }
-        static public MovingLine CalculateLineMoving(Puck puck, ObjPosition objPosition, string borderAxis)
+        private string CalculateLineMoving(ObjPosition objPosition, string borderAxis)
         {
             if (!Point.Equals(objPosition.CurrentPose, objPosition.PastPose))
             {
-                double tangentInclination = -CalculateTangentInclination(objPosition.PastPose, objPosition.CurrentPose);
-                double YaxisOffset = CalculateYaxisOffset(objPosition.CurrentPose, tangentInclination);
+                TangnentInclination = -CalculateTangentInclination(objPosition.PastPose, objPosition.CurrentPose);
+                YaxisOffset = CalculateYaxisOffset(objPosition.CurrentPose, TangnentInclination);
                 string mode = string.Empty;
 
                 if (borderAxis == "Y")
@@ -95,9 +116,9 @@ namespace AirHockeyProject
                         mode = "Forward";
                     }
                 }
-                return new MovingLine(puck, tangentInclination, YaxisOffset, mode);
+                return mode;
             }
-            return null;
+            return string.Empty;
         }
     }
 }

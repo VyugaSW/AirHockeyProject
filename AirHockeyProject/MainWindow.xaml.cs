@@ -21,14 +21,17 @@ namespace AirHockeyProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        public FieldObject Hockey { get; set; }
+        public FieldObject Hockey1 { get; set; }
+        public FieldObject Hockey2 { get; set; }
         public Puck Puck { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            Hockey = new FieldObject(ellipse, Canvas.SetLeft, Canvas.SetTop);
-            Puck = new Puck(ellipsePuck, Canvas.SetLeft, Canvas.SetTop, new FieldObject[] { Hockey });
-            Hockey.ObjPosition.CurrentPose = new Point(10, 50);
+            Hockey1 = new FieldObject(ellipse1, Canvas.SetLeft, Canvas.SetTop);
+            Hockey2 = new FieldObject(ellipse2, Canvas.SetLeft, Canvas.SetTop);
+            Puck = new Puck(ellipsePuck, Canvas.SetLeft, Canvas.SetTop, new FieldObject[] { Hockey1, Hockey2 });
+            Hockey1.ObjPosition.CurrentPose = new Point(10, 50);
+            Hockey2.ObjPosition.CurrentPose = new Point(80, 50);
             Puck.ObjPosition.CurrentPose = new Point(20, 20);
 
             PreviewKeyDown += Window_PreviewKeyDown;
@@ -36,8 +39,8 @@ namespace AirHockeyProject
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            double x = Hockey.ObjPosition.CurrentPose.X;
-            double y = Hockey.ObjPosition.CurrentPose.Y;
+            double x = Hockey1.ObjPosition.CurrentPose.X;
+            double y = Hockey1.ObjPosition.CurrentPose.Y;
 
             switch (e.Key)
             {
@@ -55,7 +58,7 @@ namespace AirHockeyProject
                     break;
             }
 
-            Hockey.ObjPosition.CurrentPose = new Point(x,y);
+            Hockey1.ObjPosition.CurrentPose = new Point(x,y);
         }
     }
 }
