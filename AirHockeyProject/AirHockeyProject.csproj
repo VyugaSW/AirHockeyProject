@@ -55,10 +55,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MovingLine.cs" />
-    <Compile Include="ObjPosition.cs" />
-    <Compile Include="FieldObject.cs" />
-    <Compile Include="Puck.cs" />
+    <Compile Include="CollisionMovement\ICollisable.cs" />
+    <Compile Include="MoveObject\IMoving.cs" />
+    <Compile Include="MoveObject\IMovable.cs" />
+    <Compile Include="MoveObject\MovableObjectWASD.cs" />
+    <Compile Include="CollisionMovement\MovingLine.cs" />
+    <Compile Include="ObjectPosition\ObjPosition.cs" />
+    <Compile Include="MoveObject\MovableObjectArrows.cs" />
+    <Compile Include="CollisionMovement\CollisionObject.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -21,44 +21,32 @@ namespace AirHockeyProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        public FieldObject Hockey1 { get; set; }
-        public FieldObject Hockey2 { get; set; }
-        public Puck Puck { get; set; }
+        public MovableObjectArrows Hockey1 { get; set; }
+        public MovableObjectWASD Hockey2 { get; set; }
+        public CollisionObject Puck { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            Hockey1 = new FieldObject(ellipse1, Canvas.SetLeft, Canvas.SetTop);
-            Hockey2 = new FieldObject(ellipse2, Canvas.SetLeft, Canvas.SetTop);
-            Puck = new Puck(ellipsePuck, Canvas.SetLeft, Canvas.SetTop, new FieldObject[] { Hockey1, Hockey2 });
-            Hockey1.ObjPosition.CurrentPose = new Point(10, 50);
-            Hockey2.ObjPosition.CurrentPose = new Point(80, 50);
-            Puck.ObjPosition.CurrentPose = new Point(20, 20);
+            Hockey1 = new MovableObjectArrows(ellipse1, Canvas.SetLeft, Canvas.SetTop);
+            Hockey2 = new MovableObjectWASD(ellipse2, Canvas.SetLeft, Canvas.SetTop);
+            Puck = new CollisionObject(ellipsePuck, Canvas.SetLeft, Canvas.SetTop, new IMovable[] { Hockey1, Hockey2 });
 
-            PreviewKeyDown += Window_PreviewKeyDown;
+            Hockey1.ObjPosition.CurrentPose = new Point(113, 145);
+            Hockey2.ObjPosition.CurrentPose = new Point(373, 145);
+            Puck.ObjPosition.CurrentPose = new Point(243, 145);
+
+            KeyDown += Window_KeyDown;
+            KeyUp += Window_KeyUp;
         }
 
-        public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        public void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            double x = Hockey1.ObjPosition.CurrentPose.X;
-            double y = Hockey1.ObjPosition.CurrentPose.Y;
+            Hockey1.Move(e.Key);
+        }
 
-            switch (e.Key)
-            {
-                case Key.Up:
-                    y -= 1;
-                    break;
-                case Key.Down:
-                    y += 1;
-                    break;
-                case Key.Left:
-                    x -= 1;
-                    break;
-                case Key.Right:
-                    x += 1;
-                    break;
-            }
-
-            Hockey1.ObjPosition.CurrentPose = new Point(x,y);
+        public void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine(e.Key);
         }
     }
 }

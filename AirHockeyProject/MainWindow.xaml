@@ -5,11 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AirHockeyProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="540" Width="520">
+        Title="AirHockey" Height="380" Width="540">
     <Canvas>
-        <Rectangle Width="515" Height="515" Stroke="Black" StrokeThickness="2"/>
-        <Ellipse x:Name="ellipse1" Fill="Red" Width="20" Height="20"/>
-        <Ellipse x:Name="ellipse2" Fill="Red" Width="20" Height="20"/>
-        <Ellipse x:Name="ellipsePuck" Fill="Blue" Width="20" Height="20" Canvas.Left="50" Canvas.Top="50"/>
+        <Viewbox MinHeight="315" MinWidth="515">
+            <Path x:Name="GameField" Width="515" Height="315" Stroke="Black" StrokeThickness="3">
+                <Path.Data>
+                    <GeometryGroup>
+                        <RectangleGeometry Rect="0,0,515,315"/>
+                        <RectangleGeometry Rect="257.5,0,515,315"/>
+                        <EllipseGeometry Center="257.5,157.5" RadiusX="30" RadiusY="30"/>
+                        <RectangleGeometry x:Name="Gates1" Rect="0,127.5,20,60"/>
+                        <RectangleGeometry x:Name="Gates2" Rect="495,127.5,20,60"/>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+        </Viewbox>
+
+        <Ellipse x:Name="ellipse1" Fill="Red" Width="30" Height="30"/>
+        <Ellipse x:Name="ellipse2" Fill="Blue" Width="30" Height="30"/>
+        <Ellipse x:Name="ellipsePuck" Fill="DimGray" Width="30" Height="30"/>
+        
     </Canvas>
 </Window>

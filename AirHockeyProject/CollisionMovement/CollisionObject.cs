@@ -9,40 +9,44 @@ using System.Windows.Threading;
 namespace AirHockeyProject
 {
 
-    public class Puck
+ 
+
+    public class CollisionObject : ICollisable
     {
         public ObjPosition ObjPosition { get; set; }
+        public IMovable[] ObjectsOnField { get; }
 
-        private readonly DispatcherTimer _collisionTimer;
-        private readonly FieldObject[] _objectsOnField;
+        public double MaxYBorder { get; } = 300;
+        public double MinYBorder { get; } = 0;
+        public double MaxXBorder { get; } = 500;
+        public double MinXBorder { get; } = 0;
+
         private MovingLine _movingLine = null;
+        private DispatcherTimer _collisionTimer;
 
-        private const double MaxBorder = 500;
-
-        public Puck(UIElement movingObject, Action<UIElement, double> setLeft, Action<UIElement, double> setTop, FieldObject[] objects)
+        public CollisionObject(UIElement movingObject, Action<UIElement, double> setLeft, Action<UIElement, double> setTop, IMovable[] objects)
         {
             ObjPosition = new ObjPosition(movingObject, setLeft, setTop);
             _collisionTimer = new DispatcherTimer();
-            _objectsOnField = objects;
+            ObjectsOnField = objects;
 
             DispatcherTimerInit();
         }
 
         private void DispatcherTimerInit()
         {
-            _collisionTimer.Interval = TimeSpan.FromMilliseconds(10.0);
+            _collisionTimer.Interval = TimeSpan.FromMilliseconds(1.0);
             _collisionTimer.Tick += CheckCollision;
             _collisionTimer.Start();
         }
-
-        private void CheckCollision(object sender, EventArgs e)
+        public void CheckCollision(object sender, EventArgs e)
         {
             CheckCollisionObjects();
             CheckCollisionBorders();
         }
         private void CheckCollisionObjects()
         {
-            foreach (FieldObject obj in _objectsOnField)
+            foreach (IMovable obj in ObjectsOnField)
             {
                 if (IsCollision(obj))
                 {
@@ -59,33 +63,33 @@ namespace AirHockeyProject
             _collisionTimer.Stop();
 
             MovingLine tempLine = null;
+            double radiusObj = (ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
 
-            if (ObjPosition.CurrentPose.X + 10 > MaxBorder)
+            if (ObjPosition.CurrentPose.X + radiusObj > MaxXBorder)
                 tempLine = new MovingLine(this, "X");
-            else if (ObjPosition.CurrentPose.X  < 0)
+            else if (ObjPosition.CurrentPose.X  < MinXBorder)
                 tempLine = new MovingLine(this, "X");
 
-            if (ObjPosition.CurrentPose.Y + 10 > MaxBorder)
+            if (ObjPosition.CurrentPose.Y + radiusObj > MaxYBorder)
                 tempLine = new MovingLine(this, "Y");
-            else if (ObjPosition.CurrentPose.Y  < 0)
+            else if (ObjPosition.CurrentPose.Y  < MinYBorder)
                 tempLine = new MovingLine(this, "Y");
 
             CreateLineMoving(tempLine);
 
             _collisionTimer.Start();
         }
-        private bool IsCollision(FieldObject objCollision)
+        private bool IsCollision(IMovable objCollision)
         {
             double lenBetweenCenters = (objCollision.ObjPosition.CurrentPose - this.ObjPosition.CurrentPose).Length;
             double radiusObj = (objCollision.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
             double radiusPuck = (this.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
 
-            if ((int)lenBetweenCenters == radiusPuck + radiusObj)
+            if ((int)lenBetweenCenters < radiusPuck + radiusObj)
                 return true;
 
             return false;
         }
-
         private void CreateLineMoving(MovingLine objLine)
         {
             if (objLine != null)
@@ -95,7 +99,6 @@ namespace AirHockeyProject
                 _movingLine.MovingTimer.Start();
             }
         }
-
 
     }
 }

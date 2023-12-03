@@ -11,14 +11,14 @@ namespace AirHockeyProject
     public class MovingLine
     {
         public DispatcherTimer MovingTimer { get; }
-        public Puck Puck { get; }
+        public IMovable Puck { get; }
         public double TangnentInclination { get; private set; }
         public double YaxisOffset { get; private set; }
 
 
         private double CoordinateOffset = 0.7;
 
-        public MovingLine(Puck puck, double tangentInclination, double YaxisOffset, string direction)
+        public MovingLine(IMovable puck, double tangentInclination, double YaxisOffset, string direction)
         {
             Puck = puck;
             TangnentInclination = tangentInclination;
@@ -27,14 +27,14 @@ namespace AirHockeyProject
 
             DisptacherTimerInit(direction);
         }
-        public MovingLine(Puck puck, Point pointOne, Point pointTwo)
+        public MovingLine(IMovable puck, Point pointOne, Point pointTwo)
         {
             Puck = puck;
             MovingTimer = new DispatcherTimer();
 
             DisptacherTimerInit(CalculateLineMoving(pointOne,pointTwo));
         }
-        public MovingLine(Puck puck, string borderAxis)
+        public MovingLine(IMovable puck, string borderAxis)
         {
             Puck = puck;
             MovingTimer = new DispatcherTimer();
@@ -49,7 +49,7 @@ namespace AirHockeyProject
 
             if (direction == "Forward")
                 MovingTimer.Tick += MoveForward;
-            else
+            else if(direction == "Back")
                 MovingTimer.Tick += MoveBack;
         }
 
