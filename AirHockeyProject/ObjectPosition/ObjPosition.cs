@@ -12,8 +12,22 @@ namespace AirHockeyProject
 
     public class ObjPosition
     {
-        public Point CurrentPose { get; set; }
-        public Point PastPose { get; set; }
+        private Point _currentPose;
+        private Point _pastPose;
+        public Point CurrentPose 
+        { 
+            get => _currentPose;
+            set
+            {
+                PastPose = _currentPose;
+                _currentPose = value;
+            }
+        }
+        public Point PastPose
+        {
+            get => _pastPose;
+            set => _pastPose = value;
+        }
 
         public UIElement MovingObject { get; private set; }
 
@@ -35,6 +49,7 @@ namespace AirHockeyProject
             DispatcherTimerInit();
         }
 
+
         private void DispatcherTimerInit()
         {
             _positionTimer.Interval = TimeSpan.FromMilliseconds(10.0);
@@ -45,7 +60,6 @@ namespace AirHockeyProject
         {
             if (MovingObject != null && EventSetTop != null && EventSetLeft != null)
             {
-                //PastPose = new Point(CurrentPose.X, CurrentPose.Y);
                 EventSetLeft(MovingObject, CurrentPose.X);
                 EventSetTop(MovingObject, CurrentPose.Y);
             }

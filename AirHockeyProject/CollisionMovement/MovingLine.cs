@@ -58,7 +58,6 @@ namespace AirHockeyProject
             double newX = Puck.ObjPosition.CurrentPose.X + CoordinateOffset;
             double newY = newX * TangnentInclination + YaxisOffset;
 
-            Puck.ObjPosition.PastPose = Puck.ObjPosition.CurrentPose;
             Puck.ObjPosition.CurrentPose = new Point(newX, newY);
         }
         public void MoveBack(object sender, EventArgs e)
@@ -66,7 +65,6 @@ namespace AirHockeyProject
             double newX = Puck.ObjPosition.CurrentPose.X - CoordinateOffset;
             double newY = newX * TangnentInclination + YaxisOffset;
 
-            Puck.ObjPosition.PastPose = Puck.ObjPosition.CurrentPose;
             Puck.ObjPosition.CurrentPose = new Point(newX, newY);
         }
 
