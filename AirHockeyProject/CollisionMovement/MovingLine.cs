@@ -38,14 +38,14 @@ namespace AirHockeyProject
         {
             Puck = puck;
             MovingTimer = new DispatcherTimer();
-
-            DisptacherTimerInit(CalculateLineMoving(puck.ObjPosition, borderAxis));
+            string mode = CalculateLineMoving(puck.ObjPosition, borderAxis);
+            DisptacherTimerInit(mode);
         }
 
 
         private void DisptacherTimerInit(string direction)
         {
-            MovingTimer.Interval = TimeSpan.FromMilliseconds(10.0);
+            MovingTimer.Interval = TimeSpan.FromMilliseconds(5.0);
 
             if (direction == "Forward")
                 MovingTimer.Tick += MoveForward;
@@ -58,6 +58,7 @@ namespace AirHockeyProject
             double newX = Puck.ObjPosition.CurrentPose.X + CoordinateOffset;
             double newY = newX * TangnentInclination + YaxisOffset;
 
+            Puck.ObjPosition.PastPose = Puck.ObjPosition.CurrentPose;
             Puck.ObjPosition.CurrentPose = new Point(newX, newY);
         }
         public void MoveBack(object sender, EventArgs e)
@@ -65,6 +66,7 @@ namespace AirHockeyProject
             double newX = Puck.ObjPosition.CurrentPose.X - CoordinateOffset;
             double newY = newX * TangnentInclination + YaxisOffset;
 
+            Puck.ObjPosition.PastPose = Puck.ObjPosition.CurrentPose;
             Puck.ObjPosition.CurrentPose = new Point(newX, newY);
         }
 

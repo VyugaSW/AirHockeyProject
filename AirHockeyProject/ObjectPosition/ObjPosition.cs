@@ -45,7 +45,7 @@ namespace AirHockeyProject
         {
             if (MovingObject != null && EventSetTop != null && EventSetLeft != null)
             {
-                PastPose = new Point(CurrentPose.X, CurrentPose.Y);
+                //PastPose = new Point(CurrentPose.X, CurrentPose.Y);
                 EventSetLeft(MovingObject, CurrentPose.X);
                 EventSetTop(MovingObject, CurrentPose.Y);
             }

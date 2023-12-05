@@ -46,15 +46,18 @@ namespace AirHockeyProject
         }
         private void CheckCollisionObjects()
         {
-            foreach (IMovable obj in ObjectsOnField)
+            if (ObjectsOnField != null)
             {
-                if (IsCollision(obj))
+                foreach (IMovable obj in ObjectsOnField)
                 {
-                    _collisionTimer.Stop();
-                    CreateLineMoving(new MovingLine(this, obj.ObjPosition.CurrentPose, this.ObjPosition.CurrentPose));
-                    _collisionTimer.Start();
+                    if (IsCollision(obj))
+                    {
+                        _collisionTimer.Stop();
+                        CreateLineMoving(new MovingLine(this, obj.ObjPosition.CurrentPose, this.ObjPosition.CurrentPose));
+                        _collisionTimer.Start();
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -85,7 +88,7 @@ namespace AirHockeyProject
             double radiusObj = (objCollision.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
             double radiusPuck = (this.ObjPosition.MovingObject as FrameworkElement).ActualWidth / 2;
 
-            if ((int)lenBetweenCenters < radiusPuck + radiusObj)
+            if ((int)lenBetweenCenters <= radiusPuck + radiusObj)
                 return true;
 
             return false;
@@ -99,7 +102,16 @@ namespace AirHockeyProject
                 _movingLine.MovingTimer.Start();
             }
         }
-
+        public void ClearMoving()
+        {
+            _movingLine?.MovingTimer.Stop();
+            _movingLine = null;
+        }
+        public void CreateMoving(Point pointOne, Point pointTwo)
+        {
+            _movingLine?.MovingTimer.Stop();
+            CreateLineMoving(new MovingLine(this, pointOne, pointTwo));
+        }
     }
 }
 
