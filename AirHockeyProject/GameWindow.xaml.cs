@@ -71,8 +71,8 @@ namespace AirHockeyProject
         }
         private void SetPositions()
         {
-            HockeyStick1.ObjPosition.CurrentPose = new Point(113, 145);
-            HockeyStick2.ObjPosition.CurrentPose = new Point(373, 14);
+            HockeyStick1.ObjPosition.CurrentPose = new Point(113, 143);
+            HockeyStick2.ObjPosition.CurrentPose = new Point(373, 143);
             Puck.ObjPosition.CurrentPose = new Point(243, 143);
         }
         public void Window_KeyDown(object sender, KeyEventArgs e)
